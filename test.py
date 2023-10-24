@@ -33,20 +33,7 @@ def visualize(img, feature,out_file,imgname):
         save_dir='temp_dir',
         alpha=0.5)
     image = mmcv.imread(img, 'color')
-
-    # seg_visualizer.add_datasample(
-    #     name='predict',
-    #     image=image,
-    #     data_sample=result,
-    #     draw_gt=False,
-    #     draw_pred=True,
-    #     wait_time=0,
-    #     out_file=None,
-    #     show=False)
-
-    # add feature map to wandb visualizer
     drawn_img = seg_visualizer.draw_featmap(feature, image, channel_reduction='squeeze_mean', )  # 'select_max''squeeze_mean' topk=6, arrangement=(2, 3)
-        # seg_visualizer.show(drawn_img)
     mmcv.imwrite(mmcv.bgr2rgb(drawn_img), out_file + '/' + f'{imgname}.png')
 def normPRED(d):
 	ma = torch.max(d)
@@ -194,65 +181,9 @@ class Test(object):
     def save(self):
         with torch.no_grad():
             for image, mask, shape, name in self.loader:
-                #image = image.cuda().float()
                 image = image.float().cuda()
-                p0, p1, p2,p3= self.net(image, shape=shape)  #, p2, p3, p4, edge, body
-                #p, p1, p2, p3, e1, b1,ss0,ss1,ss2,ss3 = self.net(image, shape=shape)
-                #xx1,xx2,xx3,xx4,ss1,ss2,ss3,ss4= self.net(image, shape=shape)
-                # 输出热图的代码
-                # shapes = shape
-                # # # xx1 = F.interpolate(xx1, size=shapes, mode='bilinear')
-                # # # xx2 = F.interpolate(xx2, size=shapes, mode='bilinear')
-                # # # xx3 = F.interpolate(xx3, size=shapes, mode='bilinear')
-                # # # xx4 = F.interpolate(xx4, size=shapes, mode='bilinear')
-                # ss0 = F.interpolate(ss0, size=shapes, mode='bilinear')
-                # ss1 = F.interpolate(ss1, size=shapes, mode='bilinear')
-                # ss2 = F.interpolate(ss2, size=shapes, mode='bilinear')
-                # ss3 = F.interpolate(ss3, size=shapes, mode='bilinear')
-                # # ss4 = F.interpolate(ss4, size=shapes, mode='bilinear')
-                # ss0,ss1,ss2,ss3 = toCHW(ss0,ss1,ss2,ss3)
-                # imgpath = path + '/images/'+name[0] + '.jpg'
-                # # headx1 = 'result/out7-11-3-f/' + self.cfg.datapath.split('/')[-1] + 'x1'
-                # # if not os.path.exists(headx1):
-                # #      os.makedirs(headx1)
-                # #headx1 = 'result/out7-11-4-f/' + self.cfg.datapath.split('/')[-1]+'x1'
-                # #headx2 = 'result/out7-11-4-f/' + self.cfg.datapath.split('/')[-1] + 'x2'
-                # #headx3 = 'result/out7-11-4-f/' + self.cfg.datapath.split('/')[-1] + 'x3'
-                # #headx4 = 'result/out7-11-4-f/' + self.cfg.datapath.split('/')[-1] + 'x4'
-                # heads0 = 'result/out9-26-1-f/' + self.cfg.datapath.split('/')[-1] + 's0'
-                # heads1 = 'result/out9-26-1-f/' + self.cfg.datapath.split('/')[-1] + 's1'
-                # heads2 = 'result/out9-26-1-f/' + self.cfg.datapath.split('/')[-1] + 's2'
-                # heads3 = 'result/out9-26-1-f/' + self.cfg.datapath.split('/')[-1] + 's3'
-                # ## heads4 = 'result/out9-14-2-f/' + self.cfg.datapath.split('/')[-1] + 's4'
-                # ## if not os.path.exists(headx1):
-                # ##     os.makedirs(headx1)
-                # ## if not os.path.exists(headx2):
-                # ##     os.makedirs(headx2)
-                # ## if not os.path.exists(headx3):
-                # ##     os.makedirs(headx3)
-                # ## if not os.path.exists(headx4):
-                # ##     os.makedirs(headx4)
-                # if not os.path.exists(heads0):
-                #     os.makedirs(heads0)
-                # if not os.path.exists(heads1):
-                #     os.makedirs(heads1)
-                # if not os.path.exists(heads2):
-                #     os.makedirs(heads2)
-                # if not os.path.exists(heads3):
-                #     os.makedirs(heads3)
-                # # if not os.path.exists(heads4):
-                # #     os.makedirs(heads4)
-                # # visualize(imgpath,xx1,headx1,name[0])
-                # # visualize(imgpath, xx2, headx2, name[0])
-                # # visualize(imgpath, xx3, headx3, name[0])
-                # # visualize(imgpath, xx4, headx4, name[0])
-                # visualize(imgpath, ss0, heads0, name[0])
-                # visualize(imgpath, ss1, heads1, name[0])
-                # visualize(imgpath, ss2, heads2, name[0])
-                # visualize(imgpath, ss3, heads3, name[0])
-                # # visualize(imgpath, ss4, heads4, name[0])
-                # 输出热图的代码到此结束
-                #xx1, xx2, xx3, xx4, ss1, ss2, ss3, ss4 = toOnemap(xx1,xx2,xx3,xx4,ss1,ss2,ss3,ss4,1)
+                p0, p1, p2,p3= self.net(image, shape=shape)
+		# 将四个级联的输出都进行保存
                 out0 = torch.sigmoid(p0[0, 0])
                 pred0 = (out0 * 255).cpu().numpy()
                 out1 = torch.sigmoid(p1[0, 0])
@@ -261,37 +192,10 @@ class Test(object):
                 pred2 = (out2 * 255).cpu().numpy()
                 out3 = torch.sigmoid(p3[0, 0])
                 pred3 = (out3 * 255).cpu().numpy()
-                # out4 = torch.sigmoid(p4[0,0])
-                # pred4 = (out4 * 255).cpu().numpy()
-                # out5 = torch.sigmoid(p5[0, 0])
-                # pred5 = (out5 * 255).cpu().numpy()
-                # out6 = torch.sigmoid(p6[0, 0])
-                # pred6 = (out6 * 255).cpu().numpy()
-                # oute = torch.sigmoid(edge[0, 0])
-                # prede = (oute * 255).cpu().numpy()
-                # outp2 = torch.sigmoid(p2[0, 0])
-                # pred2 = (outp2 * 255).cpu().numpy()
-                # outp3 = torch.sigmoid(p3[0, 0])
-                # pred3 = (outp3 * 255).cpu().numpy()
-                # outp4 = torch.sigmoid(p4[0, 0])
-                # pred4 = (outp4 * 255).cpu().numpy()
-                # outbody = torch.sigmoid(body[0,0])
-                # body = (outbody * 255).cpu().numpy()
-                # headbody = 'result/out7-4-1body/' + self.cfg.datapath.split('/')[-1]
-
-                # headedge = 'out6-16-1edge/'+self.cfg.datapath.split('/')[-1]
                 headp1 = '/data/Hms/resultmap/out10-23-2/' + self.cfg.datapath.split('/')[-1] + 'p1'
                 headp2 = '/data/Hms/resultmap/out10-23-2/' + self.cfg.datapath.split('/')[-1] + 'p2'
                 headp3 = '/data/Hms/resultmap/out10-23-2/' + self.cfg.datapath.split('/')[-1] + 'p3'
                 headp4 = '/data/Hms/resultmap/out10-23-2/' + self.cfg.datapath.split('/')[-1] + 'p4'
-                # headp5 = '/data/Hms/resultmap/out10-20-2/' + self.cfg.datapath.split('/')[-1] + 'p5'
-                # headp6 = '/data/Hms/resultmap/out10-20-2/' + self.cfg.datapath.split('/')[-1] + 'p6'
-                # headp7 = '/data/Hms/resultmap/out10-20-2/' + self.cfg.datapath.split('/')[-1] + 'p7'
-
-                # if not os.path.exists(headbody):
-                #     os.makedirs(headbody)
-                # if not os.path.exists(headedge):
-                #     os.makedirs(headedge)
                 if not os.path.exists(headp1):
                         os.makedirs(headp1)
                 if not os.path.exists(headp2):
@@ -300,40 +204,14 @@ class Test(object):
                     os.makedirs(headp3)
                 if not os.path.exists(headp4):
                     os.makedirs(headp4)
-                # if not os.path.exists(headp5):
-                #      os.makedirs(headp5)
-                # if not os.path.exists(headp6):
-                #     os.makedirs(headp6)
-                # if not os.path.exists(headp7):
-                #     os.makedirs(headp7)
 
                 cv2.imwrite(headp1 + '/' + name[0] + '.png', np.round(pred0))
                 cv2.imwrite(headp2 + '/' + name[0] + '.png', np.round(pred1))
                 cv2.imwrite(headp3 + '/' + name[0] + '.png', np.round(pred2))
                 cv2.imwrite(headp4 + '/' + name[0] + '.png', np.round(pred3))
-                # cv2.imwrite(headp5 + '/' + name[0] + '.png', np.round(pred4))
-                # cv2.imwrite(headp6 + '/' + name[0] + '.png', np.round(pred5))
-                # cv2.imwrite(headp7 + '/' + name[0] + '.png', np.round(pred6))
-                #cv2.imwrite(headbody + '/' + name[0] + '.png', np.round(body))
-                # cv2.imwrite(headedge+'/'+name[0]+'.png', np.round(prede))
-                # cv2.imwrite(headp1 + '/' + name[0] + '.png', np.round(pred2))
-                # cv2.imwrite(headp2 + '/' + name[0] + '.png', np.round(pred3))
-                # cv2.imwrite(headp3 + '/' + name[0] + '.png', np.round(pred4))
 if __name__=='__main__':
-    # print(torch.cuda.is_available())
-    # print(torch.__version__)
-    #
-    # print(torch.version.cuda)
-    #
-    # print(torch.backends.cudnn.version())
     os.environ["CUDA_VISIBLE_DEVICES"] = '5'
-    #for path in ['../data/ECSSD']:
-    # for path in ['/userHome/zy/Hms/ACCoNet/dataset/train_dataset/EORSSD/test']:
-	    # for model in ['model-47']:
-        # 	t = Test(dataset,BBNet, path,'../backbone/'+model)
-       	# 	t.save()
     path = '/userHome/zy/Hms/ACCoNet/dataset/train_dataset/EORSSD/test'
     model = '//data/Hms/model_Cas/CasCade-10-23-2/model-73'
     t = Test(dataset, BBBNet, path, model)
     t.save()
-    #os.system('python ../eval/main.py')
