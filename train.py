@@ -52,9 +52,7 @@ def bce_iou_loss(pred, mask):
 def train(Dataset, Network):
 
     # dataset
-    cfg = Dataset.Config(datapath='/userHome/zy/Hms/ACCoNet/dataset/train_dataset/EORSSD/train', savepath='/data/Hms/model_Cas/CasCade-10-24-1',mode='train', batch=16
-                         , lr=0.04, momen=0.9,
-                         decay=5e-4, epoch=100)
+    cfg = Dataset.Config(datapath='/userHome/zy/Hms/ACCoNet/dataset/train_dataset/EORSSD/train', savepath='/data/Hms/model_Cas/CasCade-10-24-1',mode='train', batch=16, lr=0.04, momen=0.9,decay=5e-4, epoch=100)
     data = Dataset.Data(cfg)
     loader = DataLoader(data, collate_fn=data.collate, batch_size=cfg.batch, shuffle=True, pin_memory=True, num_workers=8)
 
@@ -133,24 +131,12 @@ def train(Dataset, Network):
 
         for step, (image, mask, edge,body) in enumerate(loader):
             image, mask ,edge,body= image.float().cuda(), mask.float().cuda(), edge.float().cuda(), body.float().cuda()
-            #p ,p1,p2,p3,edges,bodys= net(image,mask=mask)
-            p0, p1, p2, p3 = net(image, mask=mask)  #,edge1,edge2,edge3,edge4,edge5 ,body2,body3,body4,body5
-            #p = net(image)
-            # print(torch.unique(p1))
-            # print(torch.unique(mask))
-            # lossedge=BCE(edges,edge) #+ CE(edge1,edge) +CE(edge2,edge)+CE(edge3,edge)+CE(edge4,edge) + CE(edge5,edge)
-            # lossbody = BCE(body1,body)+IOU(body1,body)#+CE(body2,body)+IOU(ToLine(body2),body)+CE(body3,body)+IOU(ToLine(body3),body)+CE(body4,body)+IOU(ToLine(body4),body) + CE(body5,body)+IOU(ToLine(body5),body)
-            # loss0 = 0.5*(CE(p10,mask))+0.5*(IOU(ToLine(p10),mask))
-            # loss01 =CE(p20,mask)+IOU(ToLine(p20),mask)
-            # loss02 = CE(p30,mask)+IOU(ToLine(p30),mask)
+            p0, p1, p2, p3 = net(image, mask=mask)
             loss1 = CE(p0,mask)+IOU(ToLine(p0),mask)
             loss2 = CE(p1,mask)+IOU(ToLine(p1),mask)
             loss3 = CE(p2,mask)+IOU(ToLine(p2),mask)
             loss4 = CE(p3,mask)+ IOU(ToLine(p3),mask)
-            # loss5 = CE(p4, mask) + IOU(ToLine(p4), mask)
-            # loss6 = CE(p5, mask) + IOU(ToLine(p5), mask)
-            # loss7 = CE(p6, mask) + IOU(ToLine(p6), mask)
-            loss =loss1 +loss2 + loss3 + loss4  #+ loss0  #+ lossedge + lossbody#
+            loss =loss1 +loss2 + loss3 + loss4  
             optimizer.zero_grad()
             with amp.scale_loss(loss, optimizer) as scale_loss:
                 scale_loss.backward()
