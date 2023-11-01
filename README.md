@@ -9,3 +9,11 @@
 |             |        |         |          |         |         |           |          |        |
 |             |        |         |          |         |         |           |          |        |
 |             |        |         |          |         |         |           |          |        |
+ 
+GeleNet-pvt：G. Li, Z. Bai, Z. Liu, X. Zhang and H. Ling, "Salient Object Detection in Optical Remote Sensing Images Driven by Transformer," in IEEE Transactions on Image Processing, vol. 32, pp. 5257-5269, 2023, doi: 10.1109/TIP.2023.3314285.   (2023 TIP)
+
+更新日志 
+2023-11-1 update
+主要更新：
+1、将第一层级联结果进行了注意力的更换，新加入的Attention.py文件就是新的一种注意力
+2、将第一层的Decoder做了更改，目的就是想要提供更多的信息
