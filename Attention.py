@@ -5,7 +5,10 @@ from torch.nn.parameter import Parameter
 
 import numpy as np
 import scipy.stats as st
-
+"""实现的是高斯卷积核来依据第一层级联结构生成的显著性图生成注意力图，使得第一层输入到下一层的特征感知的范围更大
+高斯卷积核的核大小为31x31， 方差为4.使得结果更平滑
+参考论文：Cascaded Partial Decoder for Fast and Accurate Salient Object Detection
+代码地址：https://github.com/wuzhe71/CPD"""
 
 def gkern(kernlen=16, nsig=3):
     interval = (2*nsig+1.)/kernlen
