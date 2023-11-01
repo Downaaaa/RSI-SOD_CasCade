@@ -11,7 +11,7 @@
 |             |        |         |          |         |         |           |          |        |
  
 GeleNet-pvt：G. Li, Z. Bai, Z. Liu, X. Zhang and H. Ling, "Salient Object Detection in Optical Remote Sensing Images Driven by Transformer," in IEEE Transactions on Image Processing, vol. 32, pp. 5257-5269, 2023, doi: 10.1109/TIP.2023.3314285.   (2023 TIP)  
-
+[github地址](https://github.com/MathLee/GeleNet/tree/main)
 更新日志   
 2023-11-1 update  
 主要更新：  
