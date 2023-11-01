@@ -17,3 +17,4 @@ GeleNet-pvt：G. Li, Z. Bai, Z. Liu, X. Zhang and H. Ling, "Salient Object Detec
 主要更新：  
 1、将第一层级联结果进行了注意力的更换，新加入的Attention.py文件就是新的一种注意力  
 2、将第一层的Decoder做了更改，目的就是想要提供更多的信息  
+3、将第二层的级联网络改为了第五版代码的精简版（没有加边缘、骨干信息两个分支）也既是BBRF.py文件的代码
