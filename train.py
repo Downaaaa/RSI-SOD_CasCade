@@ -52,7 +52,7 @@ def bce_iou_loss(pred, mask):
 def train(Dataset, Network):
 
     # dataset
-    cfg = Dataset.Config(datapath='/userHome/zy/Hms/ACCoNet/dataset/train_dataset/EORSSD/train', savepath='/data/Hms/model_Cas/CasCade-10-24-1',mode='train', batch=16, lr=0.04, momen=0.9,decay=5e-4, epoch=100)
+    cfg = Dataset.Config(datapath='/userHome/zy/Hms/ACCoNet/dataset/train_dataset/EORSSD/train', savepath='/data/Hms/model_Cas/CasCade-11-1-1',mode='train', batch=8, lr=0.04, momen=0.9,decay=5e-4, epoch=100)
     data = Dataset.Data(cfg)
     loader = DataLoader(data, collate_fn=data.collate, batch_size=cfg.batch, shuffle=True, pin_memory=True, num_workers=8)
 
@@ -131,20 +131,20 @@ def train(Dataset, Network):
 
         for step, (image, mask, edge,body) in enumerate(loader):
             image, mask ,edge,body= image.float().cuda(), mask.float().cuda(), edge.float().cuda(), body.float().cuda()
-            p0, p1, p2, p3 = net(image, mask=mask)
-            loss1 = CE(p0,mask)+IOU(ToLine(p0),mask)
-            loss2 = CE(p1,mask)+IOU(ToLine(p1),mask)
-            loss3 = CE(p2,mask)+IOU(ToLine(p2),mask)
-            loss4 = CE(p3,mask)+ IOU(ToLine(p3),mask)
-            loss =loss1 +loss2 + loss3 + loss4  
+            p1, p2 = net(image, mask=mask)
+            #loss1 = CE(p0,mask)+IOU(ToLine(p0),mask)
+            loss1 = CE(p1,mask)+IOU(ToLine(p1),mask)
+            loss2 = CE(p2,mask)+IOU(ToLine(p2),mask)
+            #loss4 = CE(p3,mask)+ IOU(ToLine(p3),mask)
+            loss =loss1 +loss2  #+ loss3 + loss4  
             optimizer.zero_grad()
             with amp.scale_loss(loss, optimizer) as scale_loss:
                 scale_loss.backward()
             optimizer.step()
             # scheduler.step()
             global_step += 1
-            if (step+1) % 87 == 0:
-                print('%s | step:%d/%d | lr=%.6f  loss=%.6f loss1=%.6f loss2=%.6f loss3=%.6f  loss4=%.6f ' % (datetime.datetime.now(), epoch + 1, cfg.epoch, optimizer.param_groups[1]['lr'],loss,loss1,loss2,loss3,loss4))
+            if (step+1) % 175 == 0:
+                print('%s | step:%d/%d | lr=%.6f  loss=%.6f loss1=%.6f loss2=%.6f ' % (datetime.datetime.now(), epoch + 1, cfg.epoch, optimizer.param_groups[1]['lr'],loss,loss1,loss2))
 
         if epoch >= 9:
             # mse1 = validate(net, val_loader1, 485)
