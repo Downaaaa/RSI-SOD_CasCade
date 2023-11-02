@@ -16,7 +16,7 @@ GeleNet-pvt：G. Li, Z. Bai, Z. Liu, X. Zhang and H. Ling, "Salient Object Detec
 评价指标所用代码包如下所示，利用该包还可以实现一些曲线图的对比，相对比较的方便。具体的使用可以参考下面的地址：    
 [评价指标](https://github.com/lartpang/PySODMetrics)  
   
-更新日志   
+##更新日志   
 2023-11-1 update  
 主要更新：  
 1、将第一层级联结果进行了注意力的更换，新加入的Attention.py文件就是新的一种注意力  
