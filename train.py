@@ -52,7 +52,7 @@ def bce_iou_loss(pred, mask):
 def train(Dataset, Network):
 
     # dataset
-    cfg = Dataset.Config(datapath='/userHome/zy/Hms/ACCoNet/dataset/train_dataset/EORSSD/train', savepath='/data/Hms/model_Cas/CasCade-11-1-1',mode='train', batch=8, lr=0.04, momen=0.9,decay=5e-4, epoch=100)
+    cfg = Dataset.Config(datapath='/userHome/zy/Hms/ACCoNet/dataset/train_dataset/EORSSD/train', savepath='/data/Hms/model_Cas/CasCade-11-3-1',mode='train', batch=8, lr=0.04, momen=0.9,decay=5e-4, epoch=100)
     data = Dataset.Data(cfg)
     loader = DataLoader(data, collate_fn=data.collate, batch_size=cfg.batch, shuffle=True, pin_memory=True, num_workers=8)
 
@@ -133,7 +133,7 @@ def train(Dataset, Network):
             image, mask ,edge,body= image.float().cuda(), mask.float().cuda(), edge.float().cuda(), body.float().cuda()
             p1, p2 = net(image, mask=mask)
             #loss1 = CE(p0,mask)+IOU(ToLine(p0),mask)
-            loss1 = CE(p1,mask)+IOU(ToLine(p1),mask)
+            loss1 = CE(p1,mask)  # +IOU(ToLine(p1),mask)
             loss2 = CE(p2,mask)+IOU(ToLine(p2),mask)
             #loss4 = CE(p3,mask)+ IOU(ToLine(p3),mask)
             loss =loss1 +loss2  #+ loss3 + loss4  
