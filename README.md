@@ -17,9 +17,14 @@ GeleNet-pvt：G. Li, Z. Bai, Z. Liu, X. Zhang and H. Ling, "Salient Object Detec
 [评价指标](https://github.com/lartpang/PySODMetrics)  
   
 ## 更新日志   
-2023-11-1 update  
+##### 2023-11-1 update  
 主要更新：  
 1、将第一层级联结果进行了注意力的更换，新加入的Attention.py文件就是新的一种注意力  
 2、将第一层的Decoder做了更改，目的就是想要提供更多的信息， DecoderUnit.py文件就是其主要的改动  
 3、将第二层的级联网络改为了第五版代码的精简版（没有加边缘、骨干信息两个分支）也既是BBRF.py文件的代码  
 结果如上表‘23-11-1’所示（没有训练完epoch-42的结果），好像相比上周没有什么变化
+  
+##### 2023-11-3 update
+主要更新：
+1、将第一层的backbone换成了ResNet18
+2、将损失做了更改，将第一层的结果改为交叉熵损失。
