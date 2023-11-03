@@ -111,6 +111,63 @@ class DecoderRES(nn.Module):
         return result, resultmap
 
 
+class DecoderRESF(nn.Module):
+    """
+    日期：2023-11-1
+    作用：DecoderRES的更改版本，让其实现粗分割的目的，也是只包含后三层backbone输出的特征。
+    作者：Amos
+    """
+
+    def __init__(self, channel1, channel2, channel3, channel4):
+        super(DecoderRESF, self).__init__()
+        # 将其降到64通道是为了减少计算量
+        self.BM4 = BasicConv2d(channel4, channel3, 1, padding=0)
+        self.BM3 = BasicConv2d(channel3, channel2, 1, padding=0)
+        self.BM2 = BasicConv2d(channel2, channel1, 1, padding=0)
+        # self.FM1 = BasicConv2d(channel1, channel1, 1, padding=0)
+        self.FM3 = BasicConv2d(channel3, channel3, 1, padding=0)
+        self.FM2 = BasicConv2d(channel2, channel2, 1, padding=0)
+        self.FM1 = BasicConv2d(channel1, channel1, 1, padding=0)
+        self.result1 = BasicConv2d(channel1, 64, 3, padding=1)
+        self.result = nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=1)
+        self.upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
+
+    def forward(self, x1, x2, x3, x4):
+        """
+        :param x1: backbone的第三层的特征， resnet50 为512通道
+        :param x2: backbone第四层的特征， resnet50 为1024通道
+        :param x3: backbone第五层的特征，resnet50 为2048通道
+        :return: 返回两个结果，分别是单通道未被激活的特征，以及上一步的结果. 简单点说就是返回64通道和返回1通道的结果
+        """
+        """主要思考思路：
+        1、类似FPN简单获取多的信息但是有可能结果丢失比较严重，同时本身上采样的选择影响比较的大。
+        2、多层级的操作直到最终只有一个输出。
+        3、考虑其中加入空间注意力或者通道注意力来尝试是否会对结果提升较大。
+        4、尽可能多的获取显著性目标的范围，为后续层次的特征多考虑。"""
+        x4 = F.interpolate(x4, size=x3.shape[2:], mode='bilinear', align_corners=True)
+        x4 = self.BM4(x4)
+        x3 = self.FM3(x3)
+        x3_new = x4 + x3
+
+        x3_new = F.interpolate(x3_new, size=x2.shape[2:], mode='bilinear', align_corners=True)
+        x3 = self.BM3(x3_new)
+
+        x2 = self.FM2(x2)
+        x2_new = x3 + x2
+
+        x2_new = F.interpolate(x2_new, size=x1.shape[2:], mode='bilinear', align_corners=True)
+        x2_new = self.BM2(x2_new)
+
+        x1 = self.FM1(x1)
+        x1_new = x2_new + x1
+
+        x1_new = self.upsample(x1_new)
+        result = self.result1(x1_new)  # 将尺寸还原到了H/2 W/2
+        resultmap = self.result(result)  # 得到的是没有激活的显著性图，单个通道
+        # 现在x2_new已经是x1的尺寸，x1_new的尺寸已经是2x(x1)的尺寸，
+        return result, resultmap
+
+
 class MapEnhance(nn.Module):
     """
     日期：2023-10-30
