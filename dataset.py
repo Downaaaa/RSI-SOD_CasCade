@@ -123,12 +123,12 @@ class Data(Dataset):
         self.normalize  = Normalize(mean=cfg.mean, std=cfg.std)
         self.randomcrop = RandomCrop()
         self.randomflip = RandomFlip()
-        self.resize     = Resize(256, 256)
+        self.resize     = Resize(352, 352)
         self.totensor   = ToTensor()
         self.normalizeT = NormalizeT(mean=cfg.mean, std=cfg.std)
         self.randomcropT = RandomCropT()
         self.randomflipT = RandomFlipT()
-        self.resizeT = ResizeT(256, 256)
+        self.resizeT = ResizeT(352, 352)
         self.totensorT = ToTensorT()
         self.samples    = []
         lst = glob.glob(cfg.datapath +'/labels/'+'*.png')
@@ -166,7 +166,7 @@ class Data(Dataset):
 
     def collate(self, batch):
         #size =[256, 288, 320, 352][np.random.randint(0, 4)]#[320, 352, 384, 416, 448][np.random.randint(0, 5)]#d
-        size = 256
+        size = 352
         image, mask,edge,body = [list(item) for item in zip(*batch)]
         for i in range(len(batch)):
             image[i] = cv2.resize(image[i], dsize=(size, size), interpolation=cv2.INTER_LINEAR)
