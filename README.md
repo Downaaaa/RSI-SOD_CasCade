@@ -30,6 +30,6 @@ GeleNet-pvt：G. Li, Z. Bai, Z. Liu, X. Zhang and H. Ling, "Salient Object Detec
 2、将损失做了更改，将第一层的结果改为交叉熵损失。  
 
 ##### 2023-11-8 update
-主要更新：
+主要更新：  
 1、将第一层级联结构换成GeleNet-PVT。同时将第二层的级联结构变的简单化。  
 2、将optimizer分成两个部分进行不同学习率的学习，同时第一层网络引入了预训练权重。结果表现非常的好    
