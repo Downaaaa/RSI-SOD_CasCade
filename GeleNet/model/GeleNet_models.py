@@ -11,7 +11,6 @@ from torch.nn import Softmax, Dropout
 from typing import List, Callable
 from torch import Tensor
 
-# out = channel_shuffle(out, 2)
 def channel_shuffle(x: Tensor, groups: int) -> Tensor:
     batch_size, num_channels, height, width = x.size()
     channels_per_group = num_channels // groups
