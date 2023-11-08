@@ -25,7 +25,7 @@ GeleNet-pvt：G. Li, Z. Bai, Z. Liu, X. Zhang and H. Ling, "Salient Object Detec
 结果如上表‘23-11-1’所示（没有训练完epoch-42的结果），好像相比上周没有什么变化
   
 ##### 2023-11-3 update
-主要更新：
+主要更新：  
 1、将第一层的backbone换成了ResNet18  
 2、将损失做了更改，将第一层的结果改为交叉熵损失。  
 
