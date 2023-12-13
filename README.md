@@ -35,6 +35,7 @@ GeleNet-pvt：G. Li, Z. Bai, Z. Liu, X. Zhang and H. Ling, "Salient Object Detec
 2、将optimizer分成两个部分进行不同学习率的学习，同时第一层网络引入了预训练权重。结果表现非常的好    
 3、还有的更改就是将第二层级联结果的backbone单独改为resnet18，同时decoder设计为类似于FPN的结构。  
 
-#2023-12-13 update  
+
+# 2023-12-13 update  
 主要更新：
 重新上传了文件夹CasCadeUFour，主要就是[参考论文](https://github.com/ZhenglinZhou/STAR/blob/master/lib/backbone/stackedHGNetV1.py)的网络设计级联网络
