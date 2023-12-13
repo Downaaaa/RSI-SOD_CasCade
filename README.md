@@ -38,4 +38,4 @@ GeleNet-pvt：G. Li, Z. Bai, Z. Liu, X. Zhang and H. Ling, "Salient Object Detec
 
 # 2023-12-13 update  
 主要更新：
-重新上传了文件夹CasCadeUFour，主要就是[参考论文](https://github.com/ZhenglinZhou/STAR/blob/master/lib/backbone/stackedHGNetV1.py)的网络设计级联网络
+重新上传了文件夹CasCadeNew，主要就是[参考论文](https://github.com/ZhenglinZhou/STAR/blob/master/lib/backbone/stackedHGNetV1.py)的网络设计级联网络
